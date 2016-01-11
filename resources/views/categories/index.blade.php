@@ -19,30 +19,23 @@
 	    @foreach($categories as $category)  
 				<div class="col-md-2" style="border-bottom:1px solid #EEEEEE;padding-bottom:10px;">
 					<h3 class="text-center">
-						{{{$category->title}}}
+						{{{$category['title']}}}
 					</h3>
 					<p class="text-center" style="font-family: Georgia, Times New Roman, Times, serif;">
-						{{{$category->updated_at}}} by 
-						@if(Auth::check() && Auth::user()->id === $category->user_id)
-							<a href="#">Me</a>
-						@else
-							<a href="#">{{{$category->user->name}}}</a>
-						@endif
+						{{{$category['updated_at']}}} by 
+							<a href="#">User</a>
 
 					</p>
 					<p class="text-center">
-						<a class="btn btn-info btn-xs" href="{{url('/category/'.$category->id)}}" role="button">Posts »</a>
-						@if(Auth::check() && Auth::user()->id === $category->user_id)
-							<a class="btn btn-warning btn-xs" href="{{url('/category/'.$category->id.'/edit')}}" role="button">Edit »</a>
-						@endif
-					</p>
-				@if(Auth::check() && Auth::user()->id === $category->user_id)	
+						<a class="btn btn-info btn-xs" href="{{url('/category/'.$category['id'])}}" role="button">Show »</a>
+							<a class="btn btn-warning btn-xs" href="{{url('/category/'.$category['id'].'/edit')}}" role="button">Edit »</a>
+
+					</p>	
 					<div class="text-center" onclick="return confirm('Are you sure')">
-						{!! Form::open(array('url' => '/category/'.$category->id, 'method' => 'DELETE')) !!}
+						{!! Form::open(array('url' => '/category/'.$category['id'], 'method' => 'DELETE')) !!}
 							{!! Form::submit('Delete!', array('class'=>'btn btn-danger btn-xs')) !!}
 						{!! Form::close() !!}
 					</div>
-				@endif
 				</div>
 		@endforeach
 				</div>
@@ -51,7 +44,6 @@
 			Empty Records
 		</h3>
 	@endif
-
 
 
 

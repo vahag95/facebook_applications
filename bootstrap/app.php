@@ -42,12 +42,23 @@ $app->singleton(
 );
 
 $app->singleton(
-    App\Contracts\CategoryInterface::class,
-    App\Services\CategoryService::class
+    App\Contracts\ApiCategoryInterface::class,
+    App\Services\ApiCategoryService::class
 );
+
 $app->singleton(
-    App\Contracts\PostInterface::class,
-    App\Services\PostService::class
+    App\Contracts\ApiPostInterface::class,
+    App\Services\ApiPostService::class
+);
+
+$app->singleton(
+    App\Contracts\FacebookInterface::class,
+    App\Services\FacebookService::class
+);
+
+$app->singleton(
+    App\Contracts\LinkedInInterface::class,
+    App\Services\LinkedInService::class
 );
 
 /*

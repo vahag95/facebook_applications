@@ -55,6 +55,24 @@
 							</div>
 							<div class="form-group">
 								<div class="row">
+									<div class="col-sm-6 col-sm-offset-3">
+										<div class="text-center">
+											<a href="{!!url('/fb-login')!!}" tabindex="5" class="form-control btn btn-login">Login with Facebook</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<div class="col-sm-6 col-sm-offset-3">
+										<div class="text-center">
+											<a href="{!!url('/linkedin-login')!!}" tabindex="5" class="form-control btn btn-login">Login with LinkedIn</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
 									<div class="col-lg-12">
 										<div class="text-center">
 											<a href="{!!url('/password/email/')!!}" tabindex="5" class="forgot-password">Forgot Password?</a>

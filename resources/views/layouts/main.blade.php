@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="app">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <meta charset="utf-8">
@@ -8,28 +8,30 @@
 	    <meta name="description" content="">
 	    <meta name="author" content="">
 	    <link rel="shortcut icon" href="http://bootstrap-3.ru/assets/ico/favicon.ico">
+		<link rel="stylesheet" href="{{ url('/css/bootstrap.css') }}">
+	    <title>Angular</title>
+	      	
 
-	    <title>@yield('title')</title>
-	    
-	  	<link rel="stylesheet" href="{{ url('/css/bootstrap.css') }}">
-
-	    <!-- Bootstrap core CSS -->
-
-
-	    <!-- Custom styles for this template -->
+	  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	    <script src="{{ url('/js/bootstrap.js') }}"></script>
 
 
-	    <!-- Just for debugging purposes. Don't actually copy this line! -->
-	    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+			<script src="{{ url('/angular/app/bower_components/angular/angular.js') }}"></script>
+			<script src="{{ url('/angular/bower_components/angular-route/angular-route.js') }}"></script>
+			<script src="{{ url('/angular/bower_components/angular-resource/angular-resource.js') }}"></script>
+			<script src="{{ url('/angular/bower_components/angular_ui_file_upload/oi.file.js') }}"></script>
+			<script src="{{ url('/angular/app/app.js') }}"></script>
+			<script src="{{ url('/angular/app/routes/routes.js') }}"></script>
 
-	    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	    <!--[if lt IE 9]>
-	      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-	      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-	    <![endif]-->
-	    <style type="text/css">
+			<script src="{{ url('/angular/app/controllers/HomeController.js') }}"></script>
+			<script src="{{ url('/angular/app/controllers/FileController.js') }}"></script>
+			<script src="{{ url('/angular/app/controllers/CategoriesController.js') }}"></script>
+			<script src="{{ url('/angular/app/controllers/PostsController.js') }}"></script>
 
-	    </style>
+			<script src="{{ url('/angular/app/services/Categoriesservice.js') }}"></script>
+			<script src="{{ url('/angular/app/services/PostsService.js') }}"></script>
+			<script src="{{ url('/angular/app/directives/timer.js') }}"></script>
+
 	</head>
 
   <body>
@@ -42,18 +44,18 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>                        
 				</button>
-				<a class="navbar-brand" href="{!!url()!!}">Blog.dev</a>
+				<a class="navbar-brand" href="#/">Blog.dev</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					<li><a href="{!!url('/post')!!}">Posts</a></li>
-					<li><a href="{!!url('/category')!!}">Categories</a></li>
+					<li><a href="#/posts">Posts</a></li>
+					<li><a href="#/categories">Categories</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					@if(Auth::check())
+					
 						<li class="dropdown ">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-								<span class="glyphicon glyphicon-user"></span> {{{Auth::user()->name}}}
+								<span class="glyphicon glyphicon-user"></span> 
 							</a>
 							<ul class="dropdown-menu">
 								<li><a href="#">View Profile</a></li>
@@ -64,43 +66,41 @@
 						<li>
 							<a href="{!!url('/auth/logout')!!}"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
 						</li>
-					@else
+
 						<li>
 							<a href="{!!url('/auth/register')!!}"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
 						</li>
 						<li>
 							<a href="{!!url('/auth/login')!!}"><span class="glyphicon glyphicon-log-in"></span> Login</a>
 						</li>
-						<li>
-							<a href="{!!url('/login/fb')!!}"><span class="glyphicon glyphicon-log-in"></span> Login With facebook</a>
-						</li>
-					@endif
+
 				</ul>
 			</div>
   		</div>
     </div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    @yield('header')
+    
     
 
     <div class="container" style="padding-bottom:0; margin-top:15px; ">
-		@include('alerts.messages')  
-     	 @yield('content')
 
+    	<ng-view></ng-view>
 
       	<hr>
 
-      	@include('layouts._footer')
+
     </div> <!-- /container -->
 
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="{{ url('/js/bootstrap.js') }}"></script>
+
+
+    
 	
   
-</body></html>
+</body>
+
+</html>

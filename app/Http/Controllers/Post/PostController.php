@@ -1,11 +1,15 @@
 <?php
+
 namespace App\Http\Controllers\Post;
+
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
-use App\Contracts\PostInterface;
-use App\Contracts\CategoryInterface;
+use GuzzleHttp\Client;
+use App\Contracts\ApiPostInterface;
+use App\Contracts\ApiCategoryInterface;
+
 
 class PostController extends Controller
 {
@@ -14,76 +18,98 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-    public function __construct()
+    public function index(ApiPostInterface $api_post)
     {
+        $posts = $api_post->getAllPosts();
+        return $posts;
+       // return view('posts.index', ['posts' => $posts, 'title' => 'Posts'] );
+        
+    }
 
+
+    public function imageUpload(){
+
+        $file = $_FILES[key($_FILES)];
+
+        $image_name = time().$file['name'];
+        $upload_dir = '/images/'.$image_name;
+        $upload_dir ="D:/xampp/htdocs/blog-api/public/images/".$image_name;
+       if (move_uploaded_file($file['tmp_name'], $upload_dir)){
+            return response()->json(['status'=>'Image Uploaded','image_name'=>$image_name]);
+        } else {
+            return response()->json(['status'=>'Error at image upload','message'=>'error']);
+        }
+
+        //return response()->json(['status'=>'Image Uploaded','message'=>$file['tmp_name']]);
+
+        
     }
-    public function index(PostInterface $post_service)
+
+    public function getPostsByCategoriesIds($ids,ApiPostInterface $api_post)
     {
-        return response()->json($post_service->getAll());
-        /*return view('posts.index',['posts' => $post_service->getAll(),'title' => 'Posts']);*/
+        $posts = $api_post->getPostsByCategoriesIds($ids);
+        return $posts;
     }
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function getPostsByCategoriesIds($ids,PostInterface $post_service)
+    public function create(ApiCategoryInterface $api_category)
     {
-        $posts = $post_service->getPostsByCategoriesIds($ids);
-        //dd($posts);
-        return response()->json($posts);
+        $categories = $api_category->getAllCategories();
+        return view('posts.form', ['categories' => $categories,'title' => 'Create Post'] );
     }
 
-    public function create(CategoryInterface $category_service)
-    {
-        return view('posts.form',['title' => 'Create New Post','categories' => $category_service->getAll()]);
-    }
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,PostInterface $post_service)
+    public function store(PostRequest $request,ApiPostInterface $api_post)
     {
-        
-        if($post_service->create($request->all())){
-            return response()->json( true);
-            /*return redirect('/post')->with('status', 'Post Added');*/
-        }else{   
-            return response()->json(false);
-            /*return redirect('/post/')->with('status', 'Unknown error!');*/
+        if($api_post->createPost( $request ))
+        {
+            return response()->json(['status'=>'success','message'=>'Post added']);
+            //return redirect('/post')->with('status', 'Post Added');
+        }
+        else
+        {
+            return response()->json(['status'=>'error','message'=>'Error in Add Post']);
+            //return redirect('/post')->with('warning', 'Post Error');
         }
 
     }
+
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id,PostInterface $post_service)
+    public function show($id,ApiPostInterface $api_post)
     {
-        $post = $post_service->show($id);
-        return response()->json( $post_service->show($id));
-        /*return view('posts.show',['post'=>$post,'title' => $post->name]);*/
+        $post = $api_post->getPost($id);
+        return $post;
+
+        //return view('posts.show', ['post' => $post, 'title' => $post['title']] );        //
     }
+
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id,PostInterface $post_service,CategoryInterface $category_service)
-    {
-        if(!$post_service->show($id))
-            return redirect('/post/')->with('status', 'Unknown error!');
-        $post = $post_service->show($id);
-        $categories = $category_service->getAll();
-        return view('posts.form',['title'=>"Edit Post",'id'=>$id,'post' => $post,'categories'=>$categories]);
+    public function edit($id, ApiPostInterface $api_post, ApiCategoryInterface $api_category)
+    {   
+        $post_with_category_ids = $api_post->getPostwithCategoryIds($id);
+        $categories = $api_category->getAllCategories();
+        return view('posts.form', ['post' => $post_with_category_ids, 'categories' => $categories,'title' => 'Create Post'] );
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -91,36 +117,38 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id,PostInterface $post_service)
+    public function update(PostRequest $request, $id ,ApiPostInterface $api_post)
     {
-        //
-        if($post_service->update($request->all(),$id))
+       //dd($request->all());
+        if($api_post->updatePost($id, $request ))
         {
-            return response()->json(true);
+             return response()->json(['status'=>'success','message'=>'Post edited']);
             //return redirect('/post')->with('status', 'Post Edited');
         }
         else
         {
-            return response()->json(false);
-            //return redirect('/post/')->with('status', 'Unknown error!');
+             return response()->json(['status'=>'success','message'=>'Post edited']);
+            //return redirect('/post')->with('warning', 'Post Error');
         }
     }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id,PostInterface $post_service)
+    public function destroy($id,ApiPostInterface $api_post)
     {
-        $image_name = $post_service->delete($id);
-        
-        if($image_name){
-            /*return redirect('/category')->with('status', 'Category Deleted');*/
-            return response()->json( $image_name);
-        } else{
-            /*return redirect('/category/'.$id)->with('warning', 'Unknown error!');*/
-            return response()->json(NULL);
+        //$image_name = $api_post->deletePost($id);
+        if($api_post->deletePost($id))
+        {    
+            return response()->json(['status'=>'success','message'=>'Post Deleted']);
+            //return redirect('/post')->with('status', 'Post Deleted');   
+        } 
+        else 
+        {
+            return redirect('/post')->with('warning', 'Error in post delete process');
         }
     }
 }

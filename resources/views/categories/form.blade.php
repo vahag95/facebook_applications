@@ -22,9 +22,9 @@
 @section('content')
 
     @if(isset($category))
-        {!! Form::model($category,array('url' => '/category/'.$id, 'method' => 'PUT', 'role' => 'form', 'style' => 'max-width:350px; padding:10px;', 'class' => 'center-block img-thumbnail')) !!}
+        {!! Form::model($category,array('url' => 'category/'.$category['id'], 'method' => 'PUT', 'role' => 'form', 'style' => 'max-width:350px; padding:10px;', 'class' => 'center-block img-thumbnail')) !!}
     @else
-        {!! Form::open(array('url' => '/category/', 'method' => 'POST', 'role' => 'form', 'style' => 'max-width:350px; padding:10px;', 'class' => 'center-block img-thumbnail')) !!}
+        {!! Form::open(array('url' => 'category/', 'method' => 'POST', 'role' => 'form', 'style' => 'max-width:350px; padding:10px;', 'class' => 'center-block img-thumbnail')) !!}
     @endif
             <div class="form-group">
                 {!! Form::label('Title') !!}

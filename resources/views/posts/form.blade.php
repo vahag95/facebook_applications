@@ -22,7 +22,7 @@
 @section('content')
 
     @if(isset($post))
-        {!! Form::model($post,array('url' => '/post/'.$id, 'method' => 'PUT', 'role' => 'form', 'style' => 'max-width:350px; padding:10px;', 'class' => 'center-block img-thumbnail' ,'files' => true)) !!}
+        {!! Form::model($post,array('url' => '/post/'.$post['id'], 'method' => 'PUT', 'role' => 'form', 'style' => 'max-width:350px; padding:10px;', 'class' => 'center-block img-thumbnail' ,'files' => true)) !!}
     @else
         {!! Form::open(array('url' => '/post/', 'method' => 'POST', 'role' => 'form', 'style' => 'max-width:350px; padding:10px;', 'class' => 'center-block img-thumbnail' , 'files' => true)) !!}
     @endif
@@ -40,15 +40,14 @@
                     @if(isset($post))
                         @foreach($categories as $category)
                             <div class="checkbox">
-                                
-                                 <label>{!! Form::checkbox('category_'.$category->id, $category->id, in_array( $category->id , $post->categories->lists('id')->toArray())) !!} {{{$category->title}}}</label>
+                                 <label>{!! Form::checkbox('categories_ids[]', $category['id'], in_array( $category['id'] , $post['categories'])) !!} {{{$category['title']}}}</label>
                             </div>
                         @endforeach
                     @else
                         @foreach($categories as $category)
                             <div class="checkbox">
                                 
-                                <label>{!! Form::checkbox('category_'.$category->id, $category->id) !!} {{{$category->title}}}</label>
+                                <label>{!! Form::checkbox('categories_ids[]', $category['id']) !!} {{{$category['title']}}}</label>
                                 <!-- <label><input type="checkbox" value="">Option 1</label> -->
                             </div>                       
                         @endforeach
